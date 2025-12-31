@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { JSX, useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,12 +12,9 @@ import {
   ScrollView,
   TouchableOpacity,
   ToastAndroid,
-  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Dimensions } from 'react-native';
-import { Camera, useCameraDevice, useCameraFormat } from 'react-native-vision-camera';
-import { useBarcodeScanner } from '@mgcrea/vision-camera-barcode-scanner';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 const Colors = {
@@ -35,7 +32,6 @@ import { useTranslation } from 'react-i18next';
 import { Picker } from '@react-native-picker/picker';
 import { axiosInstance } from '../config/axiosInstance';
 import Snackbar from 'react-native-snackbar';
-import { request, check, PERMISSIONS } from 'react-native-permissions';
 
 
 function HomeScreen(): JSX.Element {
@@ -59,65 +55,12 @@ function HomeScreen(): JSX.Element {
   const [selectedMeals, setSelectedMeals] = React.useState<
     Record<number, boolean>
   >({});
-  const [manualCode, setManualCode] = React.useState<string>('');
+  const [manualCode, setManualCode] = React.useState();
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [language, setLanguage] = React.useState(i18n.language);
 
-  const navigation = useNavigation<any>();
-
-  // Scanner Component for QR code scanning
-  const ScannerComponent = ({ onSuccess }: { onSuccess: (code: string) => void }) => {
-    const [hasPermission, setHasPermission] = React.useState(false);
-    const [device, setDevice] = React.useState<any>(null);
-
-    const { props: cameraProps } = useBarcodeScanner({
-      fps: 5,
-      barcodeTypes: ["qr", "ean-13", "code-128"], // Specify barcode types to scan
-      onBarcodeScanned: (barcodes) => {
-        if (barcodes.length > 0) {
-          const code = barcodes[0].value;
-          if (code) {
-            onSuccess(code);
-          }
-        }
-      },
-    });
-
-    React.useEffect(() => {
-      (async () => {
-        const result = await request(
-          Platform.OS === 'android'
-            ? PERMISSIONS.ANDROID.CAMERA
-            : PERMISSIONS.IOS.CAMERA
-        );
-        setHasPermission(result === 'granted');
-
-        if (result === 'granted') {
-          const backDevice = useCameraDevice('back');
-          setDevice(backDevice);
-        }
-      })();
-    }, []);
-
-    if (!hasPermission) {
-      return <Text>Camera permission not granted</Text>;
-    }
-
-    if (!device) {
-      return <Text>Camera not available</Text>;
-    }
-
-    return (
-      <Camera
-        style={StyleSheet.absoluteFill}
-        device={device}
-        isActive={true}
-        torch="off"
-        {...cameraProps}
-      />
-    );
-  };
+  const navigation = useNavigation();
 
   const onSuccess = async (e: any) => {
 
@@ -125,7 +68,7 @@ function HomeScreen(): JSX.Element {
       return;
     }
 
-    const code = e;
+    const code = e?.data;
     if (!code) return;
     isScanningRef.current = true;
     try {
@@ -216,7 +159,7 @@ function HomeScreen(): JSX.Element {
           price: orderAmount?.toString(),
           userId: data?.membership?.user.toString(),
           restaurantId: data?.restaurant?.id?.toString(),
-          usedPoints: Math.abs(selectedMealPoints || 0).toString(),
+          usedPoints: Math.abs(selectedMealPoints).toString(),
         })
         .then(res => {
           Alert.alert(
@@ -303,21 +246,26 @@ function HomeScreen(): JSX.Element {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       {scanning ? (
-
-        <View style={{ flex: 1 }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 18,
-              color: '#000',
-              marginTop: 5,
-              marginBottom: 20,
-            }}>
-            {t('Scan a barcode')}
-          </Text>
-
-          <ScannerComponent onSuccess={onSuccess} />
-        </View>
+        <RNCamera
+          key={scanning.toString()} // Add key prop to force re-render
+          // onRead={onSuccess}
+          flashMode={RNCamera.Constants.FlashMode.auto}
+          // showMarker={true}
+          cameraType="back"
+          reactivate={false}
+          topContent={
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 18,
+                color: '#000',
+                marginTop: 5,
+                marginBottom: 20,
+              }}>
+              {t('Scan a barcode')}
+            </Text>
+          }
+        />
       ) : data.membership ? (
 
         <View style={{ marginTop: 20 }}>
@@ -571,7 +519,7 @@ function HomeScreen(): JSX.Element {
               }}
               placeholder={t('Enter code manually')}
               value={manualCode}
-              onChangeText={text => { if (!isSubmitting) setManualCode(text); }}
+              onChangeText={text => (isSubmitting ? null : setManualCode(text))}
               aria-disabled={isSubmitting}
             />
 
