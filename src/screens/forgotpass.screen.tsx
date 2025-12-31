@@ -153,9 +153,9 @@ const styles = StyleSheet.create({
     height: 45,
     backgroundColor: '#fff',
     borderRadius: 25,
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 0,
+    marginLeft: 10,
     marginTop: 10,
   },
   headerButtonsRight: {

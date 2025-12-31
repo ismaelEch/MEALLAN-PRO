@@ -1,4 +1,4 @@
-package com.cashier_app
+package com.meallan_pro
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

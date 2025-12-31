@@ -15,8 +15,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Dimensions } from 'react-native';
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import { RNCamera } from 'react-native-camera';
+// import QRCodeScanner from 'react-native-qrcode-scanner';
+// import { RNCamera } from 'react-native-camera';
 const Colors = {
   lighter: '#f6f6f6',
   light: '#ffffff',
@@ -246,26 +246,28 @@ function HomeScreen(): JSX.Element {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       {scanning ? (
-        <RNCamera
-          key={scanning.toString()} // Add key prop to force re-render
-          // onRead={onSuccess}
-          flashMode={RNCamera.Constants.FlashMode.auto}
-          // showMarker={true}
-          cameraType="back"
-          reactivate={false}
-          topContent={
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: 18,
-                color: '#000',
-                marginTop: 5,
-                marginBottom: 20,
-              }}>
-              {t('Scan a barcode')}
-            </Text>
-          }
-        />
+        <></>
+        // <QRCodeScanner
+        //   key={scanning.toString()} // Add key prop to force re-render
+        //   onRead={onSuccess}
+        //   flashMode={RNCamera.Constants.FlashMode.auto}
+        //   showMarker={true}
+        //   cameraType="back"
+        //   reactivate={false}
+        //   topContent={
+        //     <Text
+        //       style={{
+        //         textAlign: 'center',
+        //         fontSize: 18,
+        //         color: '#000',
+        //         marginTop: 5,
+        //         marginBottom: 20,
+        //       }}>
+        //       {t('Scan a barcode')}
+        //     </Text>
+        //   }
+
+        // />
       ) : data.membership ? (
 
         <View style={{ marginTop: 20 }}>
@@ -496,11 +498,11 @@ function HomeScreen(): JSX.Element {
               borderRadius: 10,
               alignItems: 'center',
             }}
-            onPress={() => {
-              AsyncStorage.clear().then(() => {
-                setScanning(true);
-              });
-            }}
+          // onPress={() => {
+          //   AsyncStorage.clear().then(() => {
+          //     setScanning(true);
+          //   });
+          // }}
           >
             <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
               {t('New Order? Scan now!')}

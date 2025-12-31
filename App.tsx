@@ -27,7 +27,7 @@ const backgroundStyle = {
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [initialRoute, setInitialRoute] = React.useState('Home');
+  const [initialRoute, setInitialRoute] = React.useState('Login');
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {

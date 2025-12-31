@@ -1,4 +1,4 @@
-package com.cashier_app
+package com.meallan_pro
 
 import android.app.Application
 import com.facebook.react.PackageList

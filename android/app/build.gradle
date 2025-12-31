@@ -78,14 +78,15 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.cashier_app"
+    namespace "com.meallan_pro"
     defaultConfig {
-        applicationId "com.cashier_app"
+        applicationId "com.meallan_pro"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 5
         versionName "1.4"
     }
+    
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -119,7 +120,6 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
