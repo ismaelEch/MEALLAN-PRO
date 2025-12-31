@@ -1,0 +1,1 @@
+export const BaseUrl = 'https://meallan-back-production.up.railway.app/api';

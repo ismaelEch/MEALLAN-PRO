@@ -1,4 +1,14 @@
 {
-  "name": "meallanstaff",
-  "displayName": "meallanstaff"
+  "name": "cashier_app",
+  "slug": "cashier-app",
+  "ios": {
+    "bundleIdentifier": "com.meallanpro.cashierapp"
+  },
+  "displayName": "Meallan Pro",
+  "extra": {
+    "eas": {
+      "projectId": "9466ce17-746e-4e10-9ed0-f47449c6b32e"
+    }
+  }
 }
+

@@ -1,0 +1,20 @@
+{
+	"cli": {
+		"version": ">=3.0.0",
+		"appVersionSource": "local"
+	  },
+	  "build": {
+	    "production": {
+	      "android": {
+	        "buildType": "apk"
+	      },
+	      "ios": {
+	      	"scheme": "cashier_app",
+	        "distribution": "store",
+			"cache": {
+				"key": "no-cache"
+			  }
+	      }
+	    }
+	  }
+}
