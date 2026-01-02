@@ -30,8 +30,8 @@ function LoginScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = { backgroundColor: isDarkMode ? Colors.darker : Colors.lighter };
 
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('azerty');
+  const [email, setEmail] = useState('ismail.echchikhi@gmail.com');
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
 

@@ -55,11 +55,10 @@ function HomeScreen(): JSX.Element {
   const [selectedMeals, setSelectedMeals] = React.useState<
     Record<number, boolean>
   >({});
-  const [manualCode, setManualCode] = React.useState();
+  const [manualCode, setManualCode] = React.useState<string>('');
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [language, setLanguage] = React.useState(i18n.language);
-
   const navigation = useNavigation();
 
   const onSuccess = async (e: any) => {
@@ -159,7 +158,7 @@ function HomeScreen(): JSX.Element {
           price: orderAmount?.toString(),
           userId: data?.membership?.user.toString(),
           restaurantId: data?.restaurant?.id?.toString(),
-          usedPoints: Math.abs(selectedMealPoints).toString(),
+          usedPoints: selectedMealPoints ? Math.abs(selectedMealPoints).toString() : '0',
         })
         .then(res => {
           Alert.alert(
@@ -190,19 +189,17 @@ function HomeScreen(): JSX.Element {
       {
         !scanning && (
           <View style={styles.languageDropdown}>
-            <Picker
-              selectedValue={language}
-              style={{
-                width: 120,
-                height: 32,
-                color: '#000',
-                backgroundColor: '#e2e2e2',
-              }}
-              onValueChange={itemValue => onLanguageChange(itemValue)}>
-              <Picker.Item label="EN" value="en" />
-              <Picker.Item label="FR" value="fr" />
-              <Picker.Item label="ES" value="es" />
-            </Picker>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={language}
+                style={styles.pickerStyle}
+                onValueChange={itemValue => onLanguageChange(itemValue)}
+              >
+                <Picker.Item label="EN" value="en" style={styles.pickerItem} />
+                <Picker.Item label="FR" value="fr" style={styles.pickerItem} />
+                <Picker.Item label="ES" value="es" style={styles.pickerItem} />
+              </Picker>
+            </View>
           </View>
         )
       }
@@ -222,19 +219,17 @@ function HomeScreen(): JSX.Element {
               color={'#000'}
             />
             <View style={styles.languageDropdownInScanner}>
-              <Picker
-                selectedValue={language}
-                style={{
-                  width: 120,
-                  height: 32,
-                  color: '#000',
-                  backgroundColor: '#e2e2e2',
-                }}
-                onValueChange={itemValue => onLanguageChange(itemValue)}>
-                <Picker.Item label="EN" value="en" />
-                <Picker.Item label="FR" value="fr" />
-                <Picker.Item label="ES" value="es" />
-              </Picker>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={language}
+                  style={styles.pickerStyle}
+                  onValueChange={itemValue => onLanguageChange(itemValue)}
+                  mode="dropdown">
+                  <Picker.Item label="EN" value="en" style={styles.pickerItem} />
+                  <Picker.Item label="FR" value="fr" style={styles.pickerItem} />
+                  <Picker.Item label="ES" value="es" style={styles.pickerItem} />
+                </Picker>
+              </View>
             </View>
           </View>
           { }
@@ -594,6 +589,7 @@ const styles = StyleSheet.create({
     top: 20,
     right: 20,
     zIndex: 1000,
+    borderRadius: 20
   },
   centerText: {
     flex: 1,
@@ -610,6 +606,20 @@ const styles = StyleSheet.create({
   },
   buttonTouchable: {
     padding: 16,
+  },
+  pickerContainer: {
+    width: 120,
+    backgroundColor: '#e2e2e2',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  pickerStyle: {
+    width: 120,
+    color: '#000',
+  },
+  pickerItem: {
+    color: '#000',
+    fontSize: 14,
   },
 });
 
