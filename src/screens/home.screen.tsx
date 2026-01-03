@@ -12,11 +12,17 @@ import {
   ScrollView,
   TouchableOpacity,
   ToastAndroid,
+  Platform, ActionSheetIOS
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Dimensions } from 'react-native';
 // import QRCodeScanner from 'react-native-qrcode-scanner';
 // import { RNCamera } from 'react-native-camera';
+//import { launchCamera } from 'react-native-image-picker';
+
+
+
+
 const Colors = {
   lighter: '#f6f6f6',
   light: '#ffffff',
@@ -29,9 +35,11 @@ import { BaseUrl } from '../../src/config/BaseUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { Picker } from '@react-native-picker/picker';
+//import { Picker } from '@react-native-picker/picker';
 import { axiosInstance } from '../config/axiosInstance';
 import Snackbar from 'react-native-snackbar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 
 function HomeScreen(): JSX.Element {
@@ -106,6 +114,48 @@ function HomeScreen(): JSX.Element {
       setIsSubmitting(false);
     }
   };
+
+  const [hasPermission, setHasPermission] = React.useState(false);
+
+  const startScan = async () => {
+  if (isScanningRef.current) return;
+
+  /*const result = await launchCamera({
+    mediaType: 'photo',
+    cameraType: 'back',
+    quality: 0.7,
+  });
+
+  if (result.didCancel || !result.assets?.[0]?.uri) {
+    return;
+  }*/
+
+ /*  try {
+    isScanningRef.current = true;
+
+   const barcodes = await scanBarcodes(
+      result.assets[0].uri,
+      [BarcodeFormat.QR_CODE]
+    );
+
+    if (barcodes.length > 0) {
+      onSuccess({ data: barcodes[0].rawValue });
+    } else {
+      Alert.alert(t('Error'), t('No QR code detected'));
+      isScanningRef.current = false;
+    }
+  } catch (e) {
+    Alert.alert(t('Error'), t('Failed to scan QR code'));
+    isScanningRef.current = false;
+  }*/
+};
+
+ 
+
+  
+
+
+
 
   const handleManualCodeSubmit = () => {
     onSuccess({ data: manualCode });
@@ -184,23 +234,41 @@ function HomeScreen(): JSX.Element {
     setLanguage(lang);
     i18n.changeLanguage(lang);
   };
+
+  const openLanguagePicker = () => {
+  if (Platform.OS === 'ios') {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ['Cancel', 'EN', 'FR', 'ES'],
+        cancelButtonIndex: 0,
+      },
+      buttonIndex => {
+        if (buttonIndex === 1) onLanguageChange('en');
+        if (buttonIndex === 2) onLanguageChange('fr');
+        if (buttonIndex === 3) onLanguageChange('es');
+      },
+    );
+  }
+};
+
+
   return (
+    <SafeAreaView style={{ flex: 1 }}>
+
     <View style={styles.centerButton}>
       {
         !scanning && (
-          <View style={styles.languageDropdown}>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={language}
-                style={styles.pickerStyle}
-                onValueChange={itemValue => onLanguageChange(itemValue)}
-              >
-                <Picker.Item label="EN" value="en" style={styles.pickerItem} />
-                <Picker.Item label="FR" value="fr" style={styles.pickerItem} />
-                <Picker.Item label="ES" value="es" style={styles.pickerItem} />
-              </Picker>
-            </View>
-          </View>
+                  <View style={styles.languageDropdown}>
+                    <TouchableOpacity
+                      style={styles.languageButton}
+                      onPress={openLanguagePicker}
+                    >
+                      <Text style={styles.languageText}>
+                        {language.toUpperCase()}
+                      </Text>
+                      <Icon name="chevron-down" size={14} color="#000" />
+                    </TouchableOpacity>
+                  </View>
         )
       }
       {scanning && (
@@ -218,19 +286,18 @@ function HomeScreen(): JSX.Element {
               onPress={() => setScanning(false)}
               color={'#000'}
             />
-            <View style={styles.languageDropdownInScanner}>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={language}
-                  style={styles.pickerStyle}
-                  onValueChange={itemValue => onLanguageChange(itemValue)}
-                  mode="dropdown">
-                  <Picker.Item label="EN" value="en" style={styles.pickerItem} />
-                  <Picker.Item label="FR" value="fr" style={styles.pickerItem} />
-                  <Picker.Item label="ES" value="es" style={styles.pickerItem} />
-                </Picker>
-              </View>
-            </View>
+             <View style={styles.languageDropdown}>
+              <TouchableOpacity
+                style={styles.languageButton}
+                onPress={openLanguagePicker}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.languageText}>
+                  {language.toUpperCase()}
+                </Text>
+                <Icon name="chevron-down" size={14} color="#000" />
+              </TouchableOpacity>
+           </View>
           </View>
           { }
         </View>
@@ -240,30 +307,8 @@ function HomeScreen(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      {scanning ? (
-        <></>
-        // <QRCodeScanner
-        //   key={scanning.toString()} // Add key prop to force re-render
-        //   onRead={onSuccess}
-        //   flashMode={RNCamera.Constants.FlashMode.auto}
-        //   showMarker={true}
-        //   cameraType="back"
-        //   reactivate={false}
-        //   topContent={
-        //     <Text
-        //       style={{
-        //         textAlign: 'center',
-        //         fontSize: 18,
-        //         color: '#000',
-        //         marginTop: 5,
-        //         marginBottom: 20,
-        //       }}>
-        //       {t('Scan a barcode')}
-        //     </Text>
-        //   }
+            {data.membership ? (
 
-        // />
-      ) : data.membership ? (
 
         <View style={{ marginTop: 20 }}>
           <View style={{ marginTop: 20 }}>
@@ -468,12 +513,12 @@ function HomeScreen(): JSX.Element {
                   borderRadius: 10,
                   alignItems: 'center',
                 }}
-                onPress={() => {
-                  setScanning(true);
-                  setData({});
-                  setOrderAmount('');
-                  setSelectedMealPoints(0);
-                }}
+              onPress={() => {
+                setData({});
+                setOrderAmount('');
+                setSelectedMealPoints(0);
+                startScan();
+              }}
               >
                 <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
                   {t('Next? Scan again!')}
@@ -570,7 +615,9 @@ function HomeScreen(): JSX.Element {
         </>
       )}
     </View>
+    </SafeAreaView>
   );
+  
 }
 
 const styles = StyleSheet.create({
@@ -585,12 +632,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   languageDropdown: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    zIndex: 1000,
-    borderRadius: 20
-  },
+  position: 'absolute',
+  top: 10,              
+  right: 16,
+  zIndex: 10000,
+  elevation: 20,        
+},
   centerText: {
     flex: 1,
     fontSize: 18,
@@ -621,6 +668,23 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 14,
   },
+  languageButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  width: 80,
+  paddingHorizontal: 12,
+  paddingVertical: 8,
+  backgroundColor: '#e2e2e2',
+  borderRadius: 20,
+},
+
+languageText: {
+  fontSize: 14,
+  fontWeight: '600',
+  color: '#000',
+},
+
 });
 
 export default HomeScreen;
