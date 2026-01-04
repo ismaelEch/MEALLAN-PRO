@@ -14,7 +14,8 @@ import {
   ToastAndroid,
   Platform,
   ActionSheetIOS,
-  Linking
+  Linking,
+  ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -252,34 +253,41 @@ function HomeScreen(): JSX.Element {
     });
   };
 
-  const handleValidate = () => {
-    if (orderAmount) {
-      axios
-        .post(BaseUrl + '/order/create', {
-          price: orderAmount?.toString(),
-          userId: data?.membership?.user.toString(),
-          restaurantId: data?.restaurant?.id?.toString(),
-          usedPoints: selectedMealPoints ? Math.abs(selectedMealPoints).toString() : '0',
-        })
-        .then(res => {
-          Alert.alert(
-            t('Order Created Successfully'),
-            `${t('New Points Balance')} ${data.membership.points + Number(orderAmount)}`
-          );
+  const handleValidate = async () => {
+              console.log("orderAmount ::::: ",orderAmount)
+                        console.log("isSubmitting ::::: ",isSubmitting)
 
-          setData({});
-          setOrderAmount('');
-          setSelectedMealPoints(null);
-          setTotalPrice(0);
-          setSelectedMeals({});
-        })
-        .catch(err => {
-          Alert.alert(
-            t('Failed to create order at this moment!, please try again'),
-          );
-        });
-    }
-  };
+
+  if (!orderAmount || isSubmitting) return;
+
+  setIsSubmitting(true);
+
+  try {
+    const res = await axios.post(BaseUrl + '/order/create', {
+      price: orderAmount.toString(),
+      userId: data?.membership?.user.toString(),
+      restaurantId: data?.restaurant?.id?.toString(),
+      usedPoints: Math.abs(selectedMealPoints || 0).toString(),
+    });
+
+    Alert.alert(
+      t('Order Created Successfully'),
+      `${t('New Points Balance')} ${data.membership.points + Number(orderAmount)}`
+    );
+
+    setData({});
+    setOrderAmount('');
+    setSelectedMealPoints(null);
+    setTotalPrice(0);
+    setSelectedMeals({});
+  } catch (err) {
+    Alert.alert(
+      t('Failed to create order at this moment!, please try again'),
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const onLanguageChange = (lang: string) => {
     setLanguage(lang);
@@ -300,6 +308,18 @@ function HomeScreen(): JSX.Element {
         },
       );
     }
+    else {
+    Alert.alert(
+      t('Select language'),
+      '',
+      [
+        { text: 'EN', onPress: () => onLanguageChange('en') },
+        { text: 'FR', onPress: () => onLanguageChange('fr') },
+        { text: 'ES', onPress: () => onLanguageChange('es') },
+        { text: t('Cancel'), style: 'cancel' },
+      ],
+    );
+  }
   };
 
   return (
@@ -585,21 +605,32 @@ function HomeScreen(): JSX.Element {
                 </View>
 
                 <View style={{ gap: 16 }}>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: orderAmount ? '#4dc6e2' : '#c0c0c0',
-                      paddingVertical: 14,
-                      borderRadius: 10,
-                      alignItems: 'center',
-                      opacity: orderAmount ? 1 : 0.6
-                    }}
-                    onPress={handleValidate}
-                    disabled={!orderAmount}
-                  >
-                    <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
-                      {t('Validate')}
-                    </Text>
-                  </TouchableOpacity>
+                   <TouchableOpacity
+        style={{
+          backgroundColor: orderAmount && !isSubmitting ? '#4dc6e2' : '#c0c0c0',
+          paddingVertical: 14,
+          borderRadius: 10,
+          alignItems: 'center',
+          opacity: orderAmount && !isSubmitting ? 1 : 0.6,
+          flexDirection: 'row',
+          justifyContent: 'center',
+        }}
+        onPress={handleValidate}
+        disabled={!orderAmount || isSubmitting}
+      >
+        {isSubmitting ? (
+          <>
+            <ActivityIndicator size="small" color="#fff" />
+            <Text style={{ color: '#fff', marginLeft: 10 }}>
+              {t('Processing...')}
+            </Text>
+          </>
+        ) : (
+          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+            {t('Validate')}
+          </Text>
+        )}
+      </TouchableOpacity>
 
                   <TouchableOpacity
                     style={{

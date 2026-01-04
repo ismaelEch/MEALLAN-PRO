@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
 
     factory.startReactNative(
-      withModuleName: "cashier_app",
+      withModuleName: "meallan_pro",
       in: window,
       launchOptions: launchOptions
     )
