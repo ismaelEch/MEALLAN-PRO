@@ -1,6 +1,6 @@
 {
-  "name": "meallan_pro",
-  "slug": "meallan-pro",
+  "name": "cashier_app",
+  "slug": "cashier-app",
   "ios": {
     "bundleIdentifier": "com.meallanpro.cashierapp"
   },
