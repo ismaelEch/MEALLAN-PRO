@@ -49,14 +49,14 @@
       "size" : "40x40"
     },
     {
-      "filename" : "icon 1024x1024 2.jpg",
+      "filename" : "Splash 120x120.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "icon 1024x1024 (1).jpg",
+      "filename" : "Splash 180x180.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "3x",
@@ -93,7 +93,7 @@
       "size" : "83.5x83.5"
     },
     {
-      "filename" : "icon 1024x1024.jpg",
+      "filename" : "Splash 1024x1024.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -201,7 +201,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "icon 1024x1024 3.jpg",
+      "filename" : "Splash 120x120 1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "2x",
@@ -214,7 +214,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "icon 1024x1024 (1) 2.jpg",
+      "filename" : "Splash 180x180 1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "3x",
@@ -394,7 +394,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "icon 1024x1024 1.jpg",
+      "filename" : "Splash 120x120 2.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "2x",
@@ -407,7 +407,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "icon 1024x1024 (1) 1.jpg",
+      "filename" : "Splash 180x180 2.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "3x",
