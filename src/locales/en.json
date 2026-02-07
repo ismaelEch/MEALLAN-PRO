@@ -78,5 +78,7 @@
   "New Points Balance": "New Points Balance:",
   "selection_added": "\"{{name}}\" has been added to your selection.",
   "selection_removed": "\"{{name}}\" has been removed from your selection.",
-  "Code scanned. Verification in progress": "Code scanned. Verification in progress..."
+  "Code scanned. Verification in progress": "Code scanned. Verification in progress...",
+  "Search meal by name": "Search meal by name"
+
 }

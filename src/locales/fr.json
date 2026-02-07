@@ -78,5 +78,6 @@
   "New Points Balance": "Nouveau solde de points:",
   "selection_added": "\"{{name}}\" a été ajouté à votre sélection.",
   "selection_removed": "\"{{name}}\" a été supprimé de votre sélection.",
-  "Code scanned. Verification in progress": "Code scanné. Vérification en cours..."
+  "Code scanned. Verification in progress": "Code scanné. Vérification en cours...",
+  "Search meal by name": "Rechercher des repas par nom"
 }
