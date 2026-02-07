@@ -62,6 +62,7 @@ function HomeScreen(): JSX.Element {
   const navigation = useNavigation();
   const [hasCameraPermission, setHasCameraPermission] = React.useState(false);
   const [flash, setFlash] = React.useState(false);
+  const [mealSearch, setMealSearch] = React.useState('');
 
   const laserPosition = useRef(new Animated.Value(0)).current;
 
@@ -174,6 +175,7 @@ function HomeScreen(): JSX.Element {
       setData(membership);
 
     } catch (e) {
+      console.log("exception :: ", e)
       Alert.alert(
         t('Error'),
         t('Invalid Code'),
@@ -197,7 +199,6 @@ function HomeScreen(): JSX.Element {
     if (isScanningRef.current) return;
 
     const allowed = await requestCameraPermission();
-    console.log('Permission allowed:', allowed);
 
     if (!allowed) {
       return;
@@ -254,16 +255,13 @@ function HomeScreen(): JSX.Element {
   };
 
   const handleValidate = async () => {
-              console.log("orderAmount ::::: ",orderAmount)
-                        console.log("isSubmitting ::::: ",isSubmitting)
-
 
   if (!orderAmount || isSubmitting) return;
 
   setIsSubmitting(true);
 
   try {
-    const res = await axios.post(BaseUrl + '/order/create', {
+    const res = await axiosInstance.post('/order/create', {
       price: orderAmount.toString(),
       userId: data?.membership?.user.toString(),
       restaurantId: data?.restaurant?.id?.toString(),
@@ -281,6 +279,7 @@ function HomeScreen(): JSX.Element {
     setTotalPrice(0);
     setSelectedMeals({});
   } catch (err) {
+    console.log("err ::: ", err)
     Alert.alert(
       t('Failed to create order at this moment!, please try again'),
     );
@@ -523,6 +522,20 @@ function HomeScreen(): JSX.Element {
                   </Text>
                 </View>
 
+                  <TextInput
+                style={{
+                  marginVertical: 10,
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  borderRadius: 8,
+                  padding: 10,
+                  color: '#000',
+                }}
+                placeholder={t('Search meal by name')}
+                value={mealSearch}
+                onChangeText={setMealSearch}
+              />
+
                 {/* Meal List */}
                 <FlatList
                   data={data?.restaurant?.menu?.menuGroups
@@ -530,8 +543,14 @@ function HomeScreen(): JSX.Element {
                     ?.filter((meal: any) =>
                       meal.pointsToBuy !== null &&
                       meal.pointsToBuy !== undefined &&
-                      meal.pointsToBuy !== ''
-                    )}
+                      meal.pointsToBuy !== '' &&
+                      meal.label
+                        .toLowerCase()
+                        .includes(mealSearch.toLowerCase())
+                    )?.sort((a: any, b: any) =>
+                      a.label.localeCompare(b.label)
+                      )
+                  }
                   keyExtractor={item => item.id.toString()}
                   style={{ maxHeight: 200 }}
                   nestedScrollEnabled={true}
